@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	file, err := os.Open("day1/input.txt")
+	file, err := os.Open("day1_part1/input.txt")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error opening file: %v\n", err)
 		os.Exit(1)

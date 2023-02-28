@@ -1,0 +1,76 @@
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
+
+func main() {
+	file, err := os.Open("day3_part2/test.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	// Read the diagnostic report from the file
+	scanner := bufio.NewScanner(file)
+	var report []string
+	for scanner.Scan() {
+		report = append(report, scanner.Text())
+	}
+
+	// Calculate the oxygen generator rating
+	oxygen := ""
+	for i := 0; i < len(report[0]); i++ {
+		zeros, ones := 0, 0
+		for _, number := range report {
+			if number[i] == '0' {
+				zeros++
+			} else {
+				ones++
+			}
+		}
+		if ones > zeros || (ones == zeros && report[0][i] == '1') {
+			oxygen += "1"
+		} else {
+			oxygen += "0"
+		}
+	}
+	oxygenDecimal := binaryToDecimal(oxygen)
+
+	// Calculate the CO2 scrubber rating
+	co2 := ""
+	for i := 0; i < len(report[0]); i++ {
+		zeros, ones := 0, 0
+		for _, number := range report {
+			if number[i] == '0' {
+				zeros++
+			} else {
+				ones++
+			}
+		}
+		if zeros > ones || (ones == zeros && report[0][i] == '0') {
+			co2 += "1"
+		} else {
+			co2 += "0"
+		}
+	}
+	co2Decimal := binaryToDecimal(co2)
+
+	// Calculate the life support rating
+	life := oxygenDecimal * co2Decimal
+
+	fmt.Println(life)
+}
+
+// Converts a binary string to a decimal integer
+func binaryToDecimal(binary string) int {
+	decimal := 0
+	for i := len(binary) - 1; i >= 0; i-- {
+		if binary[i] == '1' {
+			decimal += 1 << (len(binary) - i - 1)
+		}
+	}
+	return decimal
+}

@@ -1,0 +1,50 @@
+package main
+
+import (
+	"fmt"
+	"io/ioutil"
+	"strconv"
+	"strings"
+)
+
+func main() {
+	input, err := ioutil.ReadFile("day6_part2/input.txt")
+	if err != nil {
+		panic(err)
+	}
+
+	fishStr := strings.Split(strings.TrimSpace(string(input)), ",")
+	fish := make([]int, len(fishStr))
+	for i, f := range fishStr {
+		n, err := strconv.Atoi(f)
+		if err != nil {
+			panic(err)
+		}
+		fish[i] = n
+	}
+
+	for day := 1; day <= 256; day++ {
+		newFishCount := 0
+		for i := range fish {
+			if fish[i] == 0 {
+				fish[i] = 6
+				newFishCount++
+			} else {
+				fish[i]--
+			}
+		}
+
+		for i := 0; i < newFishCount; i++ {
+			fish = append(fish, 8)
+		}
+
+		if day%10 == 0 {
+			total := len(fish)
+			fmt.Printf("After %d days: %d\n", day, total)
+		}
+	}
+
+	total := len(fish)
+	fmt.Printf("After 256 days: %d\n", total)
+
+}

@@ -1,0 +1,94 @@
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strings"
+)
+
+type Signal [7]bool
+type Digit int
+
+var digitPatterns = map[Digit][]Signal{
+	0: {{true, true, true, true, true, true, false}},
+	1: {{false, true, true, false, false, false, false}},
+	2: {{true, true, false, true, true, false, true}},
+	3: {{true, true, true, true, false, false, true}},
+	4: {{false, true, true, false, false, true, true}},
+	5: {{true, false, true, true, false, true, true}},
+	6: {{true, false, true, true, true, true, true}},
+	7: {{true, true, true, false, false, false, false}},
+	8: {{true, true, true, true, true, true, true}},
+	9: {{true, true, true, true, false, true, true}},
+}
+
+func parseSignal(s string) Signal {
+	var signal Signal
+	for _, c := range s {
+		if c == 'a' {
+			signal[0] = true
+		} else if c == 'b' {
+			signal[1] = true
+		} else if c == 'c' {
+			signal[2] = true
+		} else if c == 'd' {
+			signal[3] = true
+		} else if c == 'e' {
+			signal[4] = true
+		} else if c == 'f' {
+			signal[5] = true
+		} else if c == 'g' {
+			signal[6] = true
+		}
+	}
+	return signal
+}
+
+func matchSignal(signal Signal, patterns []Signal) (int, bool) {
+	for i, p := range patterns {
+		if signal == p {
+			return i, true
+		}
+	}
+	return -1, false
+}
+
+func main() {
+	file, err := os.Open("day8_part1/input.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	i := 0
+	uniquePatterns := make(map[int][]Signal)
+	for scanner.Scan() {
+		line := scanner.Text()
+		parts := strings.Split(line, " | ")
+		patternsStr := parts[0]
+		digitsStr := parts[1]
+		patterns := make([]Signal, 0)
+		digits := make([]Signal, 0)
+		for _, patternStr := range strings.Split(patternsStr, " ") {
+			patterns = append(patterns, parseSignal(patternStr))
+		}
+		for _, digitStr := range strings.Split(digitsStr, " ") {
+			digits = append(digits, parseSignal(digitStr))
+		}
+		uniquePatterns[i] = patterns
+		i++
+	}
+
+	count := 0
+	for _, digit := range digits {
+		if ind, ok := matchSignal(digit, patterns); ok {
+			if ind == 1 || ind == 4 || ind == 7 || ind == 8 {
+				count++
+			}
+		}
+	}
+
+	fmt.Println(count)
+}

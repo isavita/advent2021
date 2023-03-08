@@ -16,24 +16,6 @@ func main() {
 
 	scanner := bufio.NewScanner(file)
 
-	patterns := map[string]int{
-		"abcefg":  0,
-		"bc":      1,
-		"abged":   2,
-		"abcdg":   3,
-		"bcfg":    4,
-		"acdfg":   5,
-		"acdefg":  6,
-		"abc":     7,
-		"abcdefg": 8,
-		"abcdfg":  9,
-	}
-
-	uniquePatterns := make(map[string]bool)
-	for pattern := range patterns {
-		uniquePatterns[pattern] = true
-	}
-
 	counts := map[int]int{
 		1: 0,
 		4: 0,
@@ -44,39 +26,23 @@ func main() {
 	for scanner.Scan() {
 		line := scanner.Text()
 		splitLine := strings.Split(line, " | ")
+		outputValue := strings.Split(splitLine[1], " ")
 
-		patternsSeen := strings.Split(splitLine[0], " ")
-		outputValue := splitLine[1]
-
-		uniquePatternsSeen := make(map[string]bool)
-		for _, pattern := range patternsSeen {
-			uniquePatternsSeen[pattern] = true
-		}
-
-		digitMapping := make(map[string]int)
-		for pattern := range uniquePatternsSeen {
-			for p := range uniquePatterns {
-				if pattern == p {
-					digitMapping[pattern] = patterns[p]
-					break
-				}
+		for _, value := range outputValue {
+			if len(value) == 2 {
+				counts[1]++
+			}
+			if len(value) == 3 {
+				counts[7]++
+			}
+			if len(value) == 4 {
+				counts[4]++
+			}
+			if len(value) == 7 {
+				counts[8]++
 			}
 		}
-
-		var decodedOutputValue string
-		for _, pattern := range patternsSeen {
-			decodedOutputValue += fmt.Sprintf("%d", digitMapping[pattern])
-		}
-
-		for _, digit := range []int{1, 4, 7, 8} {
-			counts[digit] += strings.Count(decodedOutputValue, fmt.Sprintf("%d", digit))
-		}
 	}
 
-	var totalCount int
-	for _, count := range counts {
-		totalCount += count
-	}
-
-	fmt.Println(totalCount)
+	fmt.Println(counts[1] + counts[4] + counts[7] + counts[8])
 }

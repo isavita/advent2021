@@ -153,6 +153,7 @@ Here's the Python solution for the given problem:
 
 python
 Copy code
+```python
 from collections import defaultdict
 from typing import Dict, List, Tuple, Set
 
@@ -179,8 +180,9 @@ def count_paths(connections: List[str]) -> int:
         graph[b].append(a)
 
     return dfs("start", set())
-
+```
 # Replace the following lines with the contents of "day12_part1/test.txt"
+```python
 input_data = [
     "fs-end",
     "he-DX",
@@ -201,7 +203,7 @@ input_data = [
     "pj-fs",
     "start-RW",
 ]
-
+```
 print(count_paths(input_data))  # Output: 226
 You can now adapt this Python code to Go and read the input from the "day12_part1/test.txt" file. The core logic of the solution uses a depth-first search (DFS) approach to traverse the graph and count the paths that follow the given constraints. Make sure to adapt the data structures and syntax accordingly when translating the code to Go.
 """

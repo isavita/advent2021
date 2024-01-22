@@ -1,1 +1,1 @@
-404 Not Found
+target area: x=155..215, y=-132..-72
